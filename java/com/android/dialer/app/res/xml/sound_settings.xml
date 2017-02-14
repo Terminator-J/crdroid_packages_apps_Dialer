@@ -98,4 +98,17 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="dialer_general_smart_category_key"
+        android:title="@string/smart_category_title"
+        android:persistent="false">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="button_smart_mute"
+            android:summary="@string/smart_mute_summary"
+            android:title="@string/smart_mute_title" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
