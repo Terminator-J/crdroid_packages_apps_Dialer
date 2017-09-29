@@ -211,6 +211,12 @@ public class DialerSettingsActivity extends AppCompatActivity implements
         accessibilitySettings.setIconSpaceReserved(false);
         getPreferenceScreen().addPreference(accessibilitySettings);
       }
+
+      Preference OtherSettings = new Preference(getContext());
+      OtherSettings.setTitle(R.string.other_settings_label);
+      OtherSettings.setFragment(OtherSettingsFragment.class.getName());
+      OtherSettings.setIconSpaceReserved(false);
+      getPreferenceScreen().addPreference(OtherSettings);
     }
 
     @Override
