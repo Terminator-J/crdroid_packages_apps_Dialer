@@ -421,8 +421,6 @@ public class CallLogFragment extends Fragment
   @Override
   public void onPause() {
     LogUtil.enterBlock("CallLogFragment.onPause");
-    requireActivity().getContentResolver().unregisterContentObserver(callLogObserver);
-    requireActivity().getContentResolver().unregisterContentObserver(contactsObserver);
     if (getUserVisibleHint()) {
       onNotVisible();
     }
@@ -453,6 +451,8 @@ public class CallLogFragment extends Fragment
   @Override
   public void onDestroy() {
     LogUtil.enterBlock("CallLogFragment.onDestroy");
+    requireActivity().getContentResolver().unregisterContentObserver(callLogObserver);
+    requireActivity().getContentResolver().unregisterContentObserver(contactsObserver);
     if (adapter != null) {
       adapter.changeCursor(null);
     }
