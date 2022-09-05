@@ -141,14 +141,6 @@ public class DialerSettingsActivity extends AppCompatActivity implements
       soundSettings.setIconSpaceReserved(false);
       getPreferenceScreen().addPreference(soundSettings);
 
-      if (showSensorOptions()) {
-        Preference sensorSettings = new Preference(getcontext());
-        sensorSettings.setTitle(R.string.sensor_settings_title);
-        sensorSettings.setFragment(SensorSettingsFragment.class.getName());
-        sensorSettings.setIconSpaceReserved(false);
-        getPreferenceScreen().addPreference(sensorSettings);
-      }
-
       Preference quickResponseSettings = new Preference(getContext());
       Intent quickResponseSettingsIntent =
               new Intent(TelecomManager.ACTION_SHOW_RESPOND_VIA_SMS_SETTINGS);
@@ -322,11 +314,6 @@ public class DialerSettingsActivity extends AppCompatActivity implements
      */
     private boolean isPrimaryUser() {
       return requireContext().getSystemService(UserManager.class).isSystemUser();
-    }
-
-    private boolean showSensorOptions() {
-      SensorManager sm = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
-      return sm.getDefaultSensor(TYPE_PROXIMITY) != null;
     }
   }
 }
