@@ -64,12 +64,13 @@ public class SoundSettingsFragment extends PreferenceFragmentCompat
 
   private static final int MSG_UPDATE_RINGTONE_SUMMARY = 1;
 
-  public static final String BUTTON_SMART_MUTE_KEY = "button_smart_mute";
+  private static final String BUTTON_SMART_MUTE_KEY = "button_smart_mute";
 
   private static final String AUTO_CALL_RECORDING_KEY = "auto_call_recording";
 
   private SharedPreferences mPrefs;
   private SwitchPreferenceCompat mAutoCallRecording;
+  private SwitchPreferenceCompat mSmartMute;
 
   private DefaultRingtonePreference ringtonePreference;
   private final Handler ringtoneLookupComplete =
@@ -125,6 +126,10 @@ public class SoundSettingsFragment extends PreferenceFragmentCompat
     mAutoCallRecording = (SwitchPreferenceCompat) findPreference(AUTO_CALL_RECORDING_KEY);
     mAutoCallRecording.setChecked(mPrefs.getBoolean(AUTO_CALL_RECORDING_KEY, false));
     mAutoCallRecording.setOnPreferenceChangeListener(this);
+
+    mSmartMute = (SwitchPreferenceCompat) findPreference(BUTTON_SMART_MUTE_KEY);
+    mSmartMute.setChecked(mPrefs.getBoolean(BUTTON_SMART_MUTE_KEY, false));
+    mSmartMute.setOnPreferenceChangeListener(this);
 
     ringtonePreference = findPreference(context.getString(R.string.ringtone_preference_key));
     vibrateWhenRinging =
@@ -249,6 +254,12 @@ public class SoundSettingsFragment extends PreferenceFragmentCompat
         mPrefs
           .edit()
           .putBoolean(AUTO_CALL_RECORDING_KEY, value)
+          .apply();
+    } else if (preference == mSmartMute) {
+        boolean value = (Boolean) objValue;
+        mPrefs
+          .edit()
+          .putBoolean(BUTTON_SMART_MUTE_KEY, value)
           .apply();
     }
     return true;
