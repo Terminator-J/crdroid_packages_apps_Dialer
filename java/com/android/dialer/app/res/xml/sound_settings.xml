@@ -94,6 +94,7 @@
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_call_recording"
+            android:summary="@string/auto_call_recording_summary"
             android:title="@string/auto_call_recording_title" />
 
     </PreferenceCategory>
