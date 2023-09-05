@@ -76,6 +76,7 @@ public class CallButtonPresenter
   private boolean isInCallButtonUiReady;
   private PhoneAccountHandle otherAccount;
   private boolean isRecording = false;
+  private boolean isAutoCallRecording = false;
 
   private final CallRecorder.RecordingProgressListener recordingProgressListener =
       new CallRecorder.RecordingProgressListener() {
@@ -152,7 +153,9 @@ public class CallButtonPresenter
   public void onStateChange(InCallState oldState, InCallState newState, CallList callList) {
     Trace.beginSection("CallButtonPresenter.onStateChange");
     CallRecorder recorder = CallRecorder.getInstance();
-    boolean isEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.auto_call_recording_key), false);
+
+    SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    isAutoCallRecording = mPrefs.getBoolean("auto_call_recording", false);
 
     if (call != null) {
       call.removeListener(this);
@@ -162,7 +165,7 @@ public class CallButtonPresenter
     } else if (newState == InCallState.INCALL) {
       call = callList.getActiveOrBackgroundCall();
 
-    if (!isRecording && isEnabled && call != null) {
+    if (!isRecording && isAutoCallRecording && call != null) {
                 isRecording = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -186,7 +189,7 @@ public class CallButtonPresenter
       }
       call = callList.getIncomingCall();
     } else {
-      if (isEnabled && recorder.isRecording()) {
+      if (isAutoCallRecording && recorder.isRecording()) {
          recorder.finishRecording();
       }
       call = null;
