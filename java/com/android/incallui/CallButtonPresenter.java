@@ -76,8 +76,6 @@ public class CallButtonPresenter
   private DialerCall call;
   private boolean isInCallButtonUiReady;
   private PhoneAccountHandle otherAccount;
-  private boolean isRecording = false;
-  private boolean isAutoCallRecording = false;
 
   private final CallRecorder.RecordingProgressListener recordingProgressListener =
       new CallRecorder.RecordingProgressListener() {
@@ -118,7 +116,7 @@ public class CallButtonPresenter
 
     CallRecorder recorder = CallRecorder.getInstance();
     recorder.addRecordingProgressListener(recordingProgressListener);
-    if(recorder.isRecording()){
+    if (recorder.isRecording()) {
       inCallButtonUi.setCallRecordingState(true);
     } else {
       inCallButtonUi.setCallRecordingState(false);
@@ -155,8 +153,8 @@ public class CallButtonPresenter
     Trace.beginSection("CallButtonPresenter.onStateChange");
     CallRecorder recorder = CallRecorder.getInstance();
 
-    SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-    isAutoCallRecording = mPrefs.getBoolean("auto_call_recording", false);
+    SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    boolean isAutoCallRecording = mPrefs.getBoolean("auto_call_recording", false);
 
     if (call != null) {
       call.removeListener(this);
@@ -166,15 +164,14 @@ public class CallButtonPresenter
     } else if (newState == InCallState.INCALL) {
       call = callList.getActiveOrBackgroundCall();
 
-    if (!isRecording && isAutoCallRecording && call != null) {
-                isRecording = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        callRecordClicked(true);
-                    }
-                }, 500);
-    }
+      if (!recorder.isRecording() && isAutoCallRecording && call != null) {
+        new Handler().postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            callRecordClicked(true);
+          }
+        }, 500);
+      }
       // When connected to voice mail, automatically shows the dialpad.
       // (On previous releases we showed it when in-call shows up, before waiting for
       // OUTGOING.  We may want to do that once we start showing "Voice mail" label on
@@ -189,9 +186,9 @@ public class CallButtonPresenter
         getActivity().showDialpadFragment(false /* show */, true /* animate */);
       }
       call = callList.getIncomingCall();
-    } else {
-      if (isAutoCallRecording && recorder.isRecording()) {
-         recorder.finishRecording();
+    } else if (call != null) {
+      if (recorder.isRecording() && isAutoCallRecording) {
+        callRecordClicked(false);
       }
       call = null;
     }
